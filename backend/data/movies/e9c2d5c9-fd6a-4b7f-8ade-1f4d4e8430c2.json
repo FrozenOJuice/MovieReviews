@@ -1,0 +1,26 @@
+{
+    "movie_id": "e9c2d5c9-fd6a-4b7f-8ade-1f4d4e8430c2",
+    "title": "Thor Ragnarok",
+    "imdb_rating": 7.9,
+    "meta_score": 74,
+    "genres": [
+        "Action",
+        "Adventure",
+        "Comedy"
+    ],
+    "directors": [
+        "Taika Waititi"
+    ],
+    "release_date": "2017-11-03",
+    "duration": 130,
+    "description": "Imprisoned on the planet Sakaar, Thor must race against time to return to Asgard and stop Ragnarök, the destruction of his world, at the hands of the powerful and ruthless villain Hela.",
+    "main_stars": [
+        "Chris Hemsworth",
+        "Tom Hiddleston",
+        "Cate Blanchett"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 462,
+    "total_rating_count": 715040,
+    "source_folder": "Thor Ragnarok"
+}

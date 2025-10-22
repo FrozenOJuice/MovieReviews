@@ -137,12 +137,12 @@ celerybeat.pid
 # Environments
 .env
 .envrc
-.venv
+.movieReviewVenv
 env/
-venv/
+movieReviewVenv/
 ENV/
 env.bak/
-venv.bak/
+movieReviewVenv.bak/
 
 # Spyder project settings
 .spyderproject

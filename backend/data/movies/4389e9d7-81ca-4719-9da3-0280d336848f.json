@@ -1,0 +1,25 @@
+{
+    "movie_id": "4389e9d7-81ca-4719-9da3-0280d336848f",
+    "title": "Forrest Gump",
+    "imdb_rating": 8.8,
+    "meta_score": 82,
+    "genres": [
+        "Drama",
+        "Romance"
+    ],
+    "directors": [
+        "Robert Zemeckis"
+    ],
+    "release_date": "1994-07-06",
+    "duration": 142,
+    "description": "The presidencies of Kennedy and Johnson, the Vietnam War, the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, whose only desire is to be reunited with his childhood swe...",
+    "main_stars": [
+        "Tom Hanks",
+        "Robin Wright",
+        "Gary Sinise"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 173,
+    "total_rating_count": 2016919,
+    "source_folder": "Forrest Gump"
+}

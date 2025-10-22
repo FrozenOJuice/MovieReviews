@@ -1,0 +1,26 @@
+{
+    "movie_id": "261eab1d-82bc-4c87-baef-83dbc123b7b2",
+    "title": "The Avengers",
+    "imdb_rating": 8,
+    "meta_score": 69,
+    "genres": [
+        "Action",
+        "Adventure",
+        "Sci-Fi"
+    ],
+    "directors": [
+        "Joss Whedon"
+    ],
+    "release_date": "2012-05-11",
+    "duration": 143,
+    "description": "Earth's mightiest heroes must come together and learn to fight as a team if they are going to stop the mischievous Loki and his alien army from enslaving humanity.",
+    "main_stars": [
+        "Robert Downey Jr.",
+        "Chris Evans",
+        "Scarlett Johansson"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 755,
+    "total_rating_count": 1364943,
+    "source_folder": "The Avengers"
+}

@@ -1,0 +1,26 @@
+{
+    "movie_id": "133715d5-4a77-4331-ae0e-099b4d4793d9",
+    "title": "Joker",
+    "imdb_rating": 8.4,
+    "meta_score": 59,
+    "genres": [
+        "Crime",
+        "Drama",
+        "Thriller"
+    ],
+    "directors": [
+        "Todd Phillips"
+    ],
+    "release_date": "2019-10-04",
+    "duration": 122,
+    "description": "A mentally troubled stand-up comedian embarks on a downward spiral that leads to the creation of an iconic villain.",
+    "main_stars": [
+        "Joaquin Phoenix",
+        "Robert De Niro",
+        "Zazie Beetz"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 697,
+    "total_rating_count": 1213550,
+    "source_folder": "Joker"
+}

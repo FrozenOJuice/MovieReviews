@@ -1,0 +1,26 @@
+{
+    "movie_id": "b2025fd4-5153-4348-8888-a914342815f5",
+    "title": "John Wick Chapter 3  Parabellum",
+    "imdb_rating": 7.4,
+    "meta_score": 73,
+    "genres": [
+        "Action",
+        "Crime",
+        "Thriller"
+    ],
+    "directors": [
+        "Chad Stahelski"
+    ],
+    "release_date": "2019-07-05",
+    "duration": 130,
+    "description": "John Wick is on the run after killing a member of the international assassins' guild, and with a $14 million price tag on his head, he is the target of hit men and women everywhere.",
+    "main_stars": [
+        "Keanu Reeves",
+        "Halle Berry",
+        "Ian McShane"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 399,
+    "total_rating_count": 330425,
+    "source_folder": "John Wick Chapter 3  Parabellum"
+}

@@ -1,0 +1,26 @@
+{
+    "movie_id": "9aa34519-9f4f-4853-b4a2-1ed6a120ec3f",
+    "title": "The Dark Knight",
+    "imdb_rating": 9,
+    "meta_score": 84,
+    "genres": [
+        "Action",
+        "Crime",
+        "Drama"
+    ],
+    "directors": [
+        "Christopher Nolan"
+    ],
+    "release_date": "2008-07-18",
+    "duration": 152,
+    "description": "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
+    "main_stars": [
+        "Christian Bale",
+        "Heath Ledger",
+        "Aaron Eckhart"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 436,
+    "total_rating_count": 2581534,
+    "source_folder": "The Dark Knight"
+}

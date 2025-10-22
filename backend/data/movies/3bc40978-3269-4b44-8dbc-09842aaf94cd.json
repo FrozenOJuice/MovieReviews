@@ -1,0 +1,25 @@
+{
+    "movie_id": "3bc40978-3269-4b44-8dbc-09842aaf94cd",
+    "title": "Pulp Fiction",
+    "imdb_rating": 8.9,
+    "meta_score": 94,
+    "genres": [
+        "Crime",
+        "Drama"
+    ],
+    "directors": [
+        "Quentin Tarantino"
+    ],
+    "release_date": "1994-10-14",
+    "duration": 154,
+    "description": "The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.",
+    "main_stars": [
+        "John Travolta",
+        "Uma Thurman",
+        "Samuel L. Jackson"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 297,
+    "total_rating_count": 1999600,
+    "source_folder": "Pulp Fiction"
+}

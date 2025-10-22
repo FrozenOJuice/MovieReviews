@@ -1,0 +1,27 @@
+{
+    "movie_id": "75c7aea1-98ff-48be-8e75-2fe260f074db",
+    "title": "Avengers Endgame",
+    "imdb_rating": 8.4,
+    "meta_score": 78,
+    "genres": [
+        "Action",
+        "Adventure",
+        "Drama"
+    ],
+    "directors": [
+        "Anthony Russo",
+        "Joe Russo"
+    ],
+    "release_date": "2019-04-26",
+    "duration": 181,
+    "description": "After the devastating events of Avengers: Infinity War (2018), the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
+    "main_stars": [
+        "Robert Downey Jr.",
+        "Chris Evans",
+        "Mark Ruffalo"
+    ],
+    "total_user_reviews": null,
+    "total_critic_reviews": 593,
+    "total_rating_count": 1073964,
+    "source_folder": "Avengers Endgame"
+}
