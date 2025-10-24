@@ -7,6 +7,7 @@ from typing import List, Optional
 from backend.authentication.security import get_current_user
 from backend.movies import utils, schemas
 import os, json, tempfile
+from backend.penalties import utils as penalty_utils
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
@@ -63,17 +64,25 @@ def modify_watch_later(
     """
     Regular users → can only modify their own watch-later.
     Admins → can modify another user's list using ?user_id=<target_id>.
+    Restricted by penalties:
+    - suspension
     """
+    # 🔒 Check for suspension
+    restriction = penalty_utils.check_active_penalty(current_user.user_id, ["suspension"])
+    if restriction:
+        raise HTTPException(status_code=403, detail=restriction)
+
+    # Validate action
     if update.action not in ["add", "remove"]:
         raise HTTPException(status_code=400, detail="Invalid action. Use 'add' or 'remove'.")
 
+    # Check movie existence
     movie = utils.get_movie(update.movie_id)
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
 
+    # Determine target
     target_id = current_user.user_id
-
-    # ✅ FIXED: consistent role check using attribute instead of dict access
     if user_id:
         if current_user.role != "administrator":
             raise HTTPException(status_code=403, detail="Not authorized to modify other users' lists.")

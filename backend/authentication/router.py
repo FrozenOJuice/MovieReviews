@@ -1,11 +1,12 @@
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordRequestForm, HTTPAuthorizationCredentials, HTTPBearer
 from backend.authentication import schemas, utils, security
+from backend.penalties import utils as penalty_utils
 import uuid
 
 bearer_scheme = HTTPBearer()
 
-router = APIRouter(prefix="/auth", tags=["authentication"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 # Register
 @router.post('/register', response_model=schemas.UserResponse, status_code=status.HTTP_201_CREATED)
@@ -41,12 +42,22 @@ async def register(user: schemas.UserCreate):
 # Login
 @router.post('/login', response_model=schemas.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
+    """
+    Authenticate user and issue a token.
+    Restricted by penalties:
+    - suspension → cannot log in
+    """
     user = utils.get_user_by_username(form_data.username)
     if not user or not security.verify_password(form_data.password, user["hashed_password"]):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid username or password")
     
     if user["status"] != schemas.UserStatus.ACTIVE.value:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Account is deactivated")
+
+    # 🔒 Check if user is suspended
+    restriction = penalty_utils.check_active_penalty(user["user_id"], ["suspension"])
+    if restriction:
+        raise HTTPException(status_code=403, detail="Your account is suspended. Please contact support.")
 
     access_token = security.create_access_token(
         data={"sub": user["user_id"], "role": user["role"], "status": user["status"]}

@@ -2,7 +2,7 @@ import os, json, tempfile, shutil
 from typing import List, Dict, Optional
 from datetime import datetime
 from backend.reviews import schemas
-from backend.authentication.utils import _convert_datetime_to_string
+from backend.authentication.utils import _convert_datetime_to_string, load_active_users, save_active_users
 
 # Base directory for review JSON files
 BASE_DIR = os.path.join(os.path.dirname(__file__), "..", "data", "reviews")
@@ -47,9 +47,12 @@ def save_reviews(movie_id: str, reviews: List[Dict]) -> None:
 
 
 def user_already_reviewed(movie_id: str, user_id: str) -> bool:
-    """Return True if the user already has a review for this movie."""
-    reviews = load_reviews(movie_id)
-    return any(r["user_id"] == user_id for r in reviews)
+    """Return True if user already reviewed this movie (using movies_reviewed list)."""
+    users = load_active_users()
+    for user in users:
+        if user["user_id"] == user_id:
+            return movie_id in user.get("movies_reviewed", [])
+    return False
 
 
 def add_review(movie_id: str, review_data: schemas.ReviewCreate, user_id: str) -> schemas.Review:
@@ -64,11 +67,23 @@ def add_review(movie_id: str, review_data: schemas.ReviewCreate, user_id: str) -
         user_id=user_id,
         title=review_data.title,
         rating=review_data.rating,
-        text=review_data.text
+        text=review_data.text,
     ).dict()
 
+    # ✅ Save the review
     reviews.append(new_review)
     save_reviews(movie_id, reviews)
+
+    # ✅ Update user's movies_reviewed (store movie_id, not review_id)
+    users = load_active_users()
+    for user in users:
+        if user["user_id"] == user_id:
+            user.setdefault("movies_reviewed", [])
+            if movie_id not in user["movies_reviewed"]:
+                user["movies_reviewed"].append(movie_id)
+            break
+    save_active_users(users)
+
     return new_review
 
 

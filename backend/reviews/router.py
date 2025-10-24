@@ -3,6 +3,7 @@ from typing import List, Optional
 from backend.reviews import utils, schemas
 from backend.authentication import schemas as auth_schemas
 from backend.authentication.security import get_current_user
+from backend.penalties import utils as penalty_utils
 
 
 router = APIRouter(prefix="/reviews", tags=["Reviews"])
@@ -38,22 +39,59 @@ def get_review(movie_id: str, review_id: str, current_user=Depends(get_current_u
 
 
 @router.post("/{movie_id}", response_model=schemas.Review)
-def add_review(movie_id: str, review_data: schemas.ReviewCreate, current_user=Depends(get_current_user)):
-    """Add a new review for a movie — limited to 1 per user."""
+def add_review(
+    movie_id: str,
+    review_data: schemas.ReviewCreate,
+    current_user=Depends(get_current_user)
+):
+    """
+    Add a new review for a movie — limited to 1 per user.
+    Restricted by penalties:
+    - review_ban
+    - posting_ban
+    - suspension
+    """
+    # 🔒 Check for active penalties
+    restriction = penalty_utils.check_active_penalty(
+        current_user.user_id,
+        ["review_ban", "posting_ban", "suspension"]
+    )
+    if restriction:
+        raise HTTPException(status_code=403, detail=restriction)
+
     try:
         return utils.add_review(movie_id, review_data, current_user.user_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-# Can't add review if under penalty, need to add
+
 
 @router.patch("/{movie_id}/{review_id}", response_model=schemas.Review)
-def edit_review(movie_id: str, review_id: str, updates: schemas.ReviewUpdate, current_user=Depends(get_current_user)):
-    """Edit a review (only the author or an admin)."""
+def edit_review(
+    movie_id: str,
+    review_id: str,
+    updates: schemas.ReviewUpdate,
+    current_user=Depends(get_current_user)
+):
+    """
+    Edit a review (only the author or an admin).
+    Restricted by penalties:
+    - review_ban
+    - posting_ban
+    - suspension
+    """
+    # 🔒 Check for penalties before allowing edits
+    restriction = penalty_utils.check_active_penalty(
+        current_user.user_id,
+        ["review_ban", "posting_ban", "suspension"]
+    )
+    if restriction:
+        raise HTTPException(status_code=403, detail=restriction)
+
     review = utils.get_review(movie_id, review_id)
     if not review:
         raise HTTPException(status_code=404, detail="Review not found")
 
-    # Only owner or admin can edit
+    # Only the owner or an admin can edit
     if review["user_id"] != current_user.user_id and current_user.role != "administrator":
         raise HTTPException(status_code=403, detail="Not authorized to edit this review")
 

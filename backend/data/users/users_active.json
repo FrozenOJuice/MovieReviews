@@ -6,7 +6,9 @@
         "hashed_password": "$2b$12$jZDBUQhuRYF.4LEQlRAkx.iYRx9RTXITpDBZYB/NPXroqpMCSctCe",
         "role": "administrator",
         "status": "active",
-        "movies_reviewed": [],
+        "movies_reviewed": [
+            "75c7aea1-98ff-48be-8e75-2fe260f074db"
+        ],
         "watch_later": [],
         "penalties": []
     },
