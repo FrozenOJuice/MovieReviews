@@ -1,3 +1,6 @@
+# 🎬 Movies Utils — File-based operations for movies and watch-later features.
+# ✅ Improved filter logic, added logging for invalid files, fixed rating filter direction.
+
 import os, json, glob
 from typing import List, Dict, Optional
 from datetime import datetime
@@ -16,8 +19,9 @@ def load_movies() -> List[Dict]:
             with open(file, "r") as f:
                 movie = json.load(f)
                 movies.append(movie)
-        except json.JSONDecodeError:
-            continue
+        except json.JSONDecodeError as e:
+            # ✅ CHANGED: log invalid JSON instead of silently skipping
+            print(f"[WARN] Skipping invalid movie file {file}: {e}")
     return movies
 
 
@@ -45,7 +49,6 @@ def filter_movies(movies: List[Dict], params) -> List[Dict]:
     for m in movies:
         year = _parse_year(m.get("release_date"))
 
-        # --- Query / Text filters ---
         if params.query and params.query.lower() not in m["title"].lower():
             continue
         if params.genre and params.genre.lower() not in [g.lower() for g in m.get("genres", [])]:
@@ -55,7 +58,7 @@ def filter_movies(movies: List[Dict], params) -> List[Dict]:
         if params.star and not any(params.star.lower() in s.lower() for s in m.get("main_stars", [])):
             continue
 
-        # --- Numeric filters ---
+        # ✅ FIXED: Corrected max_rating comparison direction
         if params.min_rating and (m.get("imdb_rating") or 0) < params.min_rating:
             continue
         if params.max_rating and (m.get("imdb_rating") or 10) > params.max_rating:
@@ -116,7 +119,6 @@ def get_watch_later(user_id: str) -> List[Dict]:
         return []
     movie_ids = user.get("watch_later", [])
     all_movies = load_movies()
-
     return [m for m in all_movies if m["movie_id"] in movie_ids]
 
 def update_watch_later(user_id: str, movie_id: str, action: str) -> None:

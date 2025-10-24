@@ -1,9 +1,12 @@
+# 🎬 Movies Router — Handles all movie browsing and watch-later features.
+# 🔧 Updated for cleaner admin logic, improved type consistency, and better file handling.
+
 from fastapi import APIRouter, Depends, HTTPException, Query, BackgroundTasks
 from fastapi.responses import FileResponse
 from typing import List, Optional
 from backend.authentication.security import get_current_user
 from backend.movies import utils, schemas
-import os, json
+import os, json, tempfile
 
 router = APIRouter(prefix="/movies", tags=["Movies"])
 
@@ -17,26 +20,23 @@ def download_movies(background_tasks: BackgroundTasks, current_user: dict = Depe
     if not movies:
         raise HTTPException(status_code=404, detail="No movies found.")
 
-    export_path = os.path.join(utils.MOVIES_DIR, "_all_movies.json")
-
-    # Write export file
-    with open(export_path, "w") as f:
+    tmp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".json")
+    with open(tmp_file.name, "w") as f:
         json.dump(movies, f, indent=4)
 
-    # Schedule deletion after response is sent
-    background_tasks.add_task(os.remove, export_path)
+    background_tasks.add_task(os.remove, tmp_file.name)
 
     return FileResponse(
-        export_path,
+        tmp_file.name,
         filename="movies.json",
-        media_type="application/json",
-        background=background_tasks
+        media_type="application/json"
     )
 
+
 # ---------------- Watch-Later Routes ----------------
-@router.get("/watch-later")
+@router.get("/watch-later", response_model=schemas.WatchLaterResponse)
 def get_watch_later(
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.UserToken = Depends(get_current_user),
     user_id: Optional[str] = Query(None, description="Admin can specify another user ID")
 ):
     """
@@ -45,7 +45,6 @@ def get_watch_later(
     """
     target_id = current_user.user_id
 
-    # Admin override
     if user_id:
         if current_user.role != "administrator":
             raise HTTPException(status_code=403, detail="Not authorized to view other users' lists.")
@@ -58,7 +57,7 @@ def get_watch_later(
 @router.patch("/watch-later")
 def modify_watch_later(
     update: schemas.WatchLaterUpdate,
-    current_user: dict = Depends(get_current_user),
+    current_user: schemas.UserToken = Depends(get_current_user),
     user_id: Optional[str] = Query(None, description="Admin can modify another user’s list")
 ):
     """
@@ -74,9 +73,9 @@ def modify_watch_later(
 
     target_id = current_user.user_id
 
-    # Admin override
+    # ✅ FIXED: consistent role check using attribute instead of dict access
     if user_id:
-        if current_user["role"] != "administrator":
+        if current_user.role != "administrator":
             raise HTTPException(status_code=403, detail="Not authorized to modify other users' lists.")
         target_id = user_id
 
@@ -84,29 +83,34 @@ def modify_watch_later(
     return {"message": f"Movie {update.action}ed to {('user '+target_id) if user_id else 'your'} watch-later list."}
 
 
-
-
 @router.get("/", response_model=List[schemas.Movie])
 def list_movies(
     params: schemas.MovieSearchParams = Depends(),
-    current_user: dict = Depends(get_current_user)
+    current_user: schemas.UserToken = Depends(get_current_user)
 ):
     movies = utils.load_movies()
-
     movies = utils.filter_movies(movies, params)
     movies = utils.sort_movies(movies, params.sort_by, params.order)
     movies = utils.paginate_movies(movies, params.page, params.limit)
     return movies
 
+# ✅ /movies/search alias → same functionality as /movies/
+# Don't know if I even need this route
+@router.get("/search", response_model=List[schemas.Movie])
+def search_movies(
+    params: schemas.MovieSearchParams = Depends(),
+    current_user: schemas.UserToken = Depends(get_current_user)
+):
+    """Alias for /movies/ — same search, filter, and pagination logic."""
+    return list_movies(params=params, current_user=current_user)
 
 @router.get("/{movie_id}", response_model=schemas.Movie)
-def get_movie(movie_id: str, current_user: dict = Depends(get_current_user)):
+def get_movie(movie_id: str, current_user: schemas.UserToken = Depends(get_current_user)):
     movie = utils.get_movie(movie_id)
     if not movie:
         raise HTTPException(status_code=404, detail="Movie not found")
     return movie
 
 
-
-
-
+# Suggestions
+# 

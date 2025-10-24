@@ -1,7 +1,9 @@
 from fastapi import APIRouter, HTTPException, Depends, Query
 from typing import List, Optional
 from backend.reviews import utils, schemas
+from backend.authentication import schemas as auth_schemas
 from backend.authentication.security import get_current_user
+
 
 router = APIRouter(prefix="/reviews", tags=["Reviews"])
 
@@ -42,7 +44,7 @@ def add_review(movie_id: str, review_data: schemas.ReviewCreate, current_user=De
         return utils.add_review(movie_id, review_data, current_user.user_id)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-
+# Can't add review if under penalty, need to add
 
 @router.patch("/{movie_id}/{review_id}", response_model=schemas.Review)
 def edit_review(movie_id: str, review_id: str, updates: schemas.ReviewUpdate, current_user=Depends(get_current_user)):
@@ -52,7 +54,7 @@ def edit_review(movie_id: str, review_id: str, updates: schemas.ReviewUpdate, cu
         raise HTTPException(status_code=404, detail="Review not found")
 
     # Only owner or admin can edit
-    if review["user_id"] != current_user.user_id and current_user.role != "admin":
+    if review["user_id"] != current_user.user_id and current_user.role != "administrator":
         raise HTTPException(status_code=403, detail="Not authorized to edit this review")
 
     updated = utils.update_review(movie_id, review_id, updates)
@@ -66,8 +68,8 @@ def delete_review(movie_id: str, review_id: str, current_user=Depends(get_curren
     if not review:
         raise HTTPException(status_code=404, detail="Review not found")
 
-    # Only owner or admin can delete
-    if review["user_id"] != current_user.user_id and current_user.role != "admin":
+    # Only owner or admin or mod can delete
+    if review["user_id"] != current_user.user_id and current_user.role not in ("administrator", "moderator"):
         raise HTTPException(status_code=403, detail="Not authorized to delete this review")
 
     deleted = utils.delete_review(movie_id, review_id)
@@ -83,3 +85,7 @@ def vote_review(movie_id: str, review_id: str, vote: schemas.Vote, current_user=
     if not updated:
         raise HTTPException(status_code=404, detail="Review not found")
     return updated
+
+
+# Suggestions
+# 

@@ -114,3 +114,8 @@ async def reset_password(token: str, new_password: str):
     utils.save_inactive_users(inactive)
 
     return {"message": "Password successfully reset"}
+
+
+# Suggestions:
+# Incorporate sending an email to reset password
+# Hierarchical roles

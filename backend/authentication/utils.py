@@ -132,12 +132,15 @@ def update_user_status(user_id: str, status: schemas.UserStatus) -> bool:
 
 
 def load_revoked_tokens() -> list[str]:
-    """Load revoked tokens from JSON file, returning [] if file is missing or empty."""
+    """Load revoked tokens safely."""
+    if not os.path.exists(REVOKED_TOKENS_FILE):
+        return []
     with open(REVOKED_TOKENS_FILE, "r") as f:
-        content = f.read().strip()
-        if not content:
+        try:
+            content = f.read().strip()
+            return json.loads(content) if content else []
+        except json.JSONDecodeError:
             return []
-        return json.loads(content)
 
 
 def save_revoked_tokens(tokens: list[str]):
