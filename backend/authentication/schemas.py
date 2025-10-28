@@ -57,18 +57,17 @@ class UserResponse(BaseModel):
     watch_later: List = []
     penalties: List[Dict] = []
 
-
-# 🔑 USER LOGIN CONTRACT
+# USER LOGIN CONTRACT
 class UserLogin(BaseModel):
     username: str
     password: str
 
-# 🎫 TOKEN RESPONSE CONTRACT
+# TOKEN RESPONSE CONTRACT
 class Token(BaseModel):
     access_token: str  # 🔑 JWT token
     token_type: str = "bearer"  # 🏷️ Standard token type
 
-# 📄 TOKEN DATA CONTRACT (What's embedded in JWT)
+# TOKEN DATA CONTRACT (What's embedded in JWT)
 class TokenData(BaseModel):
     user_id: Optional[str] = None  # 👤 User identifier
     role: Optional[str] = None     # 🎭 User role for authorization

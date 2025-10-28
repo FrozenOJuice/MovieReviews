@@ -16,7 +16,7 @@
         "user_id": "7d7d4c05-3e24-4565-91b3-8a22a639e920",
         "username": "member",
         "email": "member@example.com",
-        "hashed_password": "$2b$12$uhDHo5hJ4qJsINni2MDksOYLyw5uqW7wxDH52ohDifE.DzCdVP0XC",
+        "hashed_password": "$2b$12$M4NjIVbv1Fvpb903XzgEOuLTR5BxHphPNPAjI6zPcO/M.bPg.Nb8O",
         "role": "member",
         "status": "active",
         "movies_reviewed": [],
